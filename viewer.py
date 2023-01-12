@@ -16,7 +16,10 @@ logging.basicConfig(
 host = os.environ.get('MEMCHACHED_HOST') or 'memcached'
 port = os.environ.get('MEMCHACHED_PORT') or 11211
 ha_token = os.environ.get('HA_TOKEN') or 'token'
+ha_host = os.environ.get('HA_HOST') or 'ha.host'
 
+
+# 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5MDlmYjc3MzQ3NTU0NDhhODBlMTQ2ZjRiYWZjMThlMSIsImlhdCI6MTY3MzQ4MTQwNiwiZXhwIjoxOTg4ODQxNDA2fQ.qQTlZBRyurKTEDRr5hQmlkfteqEQTWqx6wiDZApYSOc'
 cache = base.Client((host, port))
 
 # This is the Viewer
@@ -31,7 +34,7 @@ def test():
 @route('/radiation')
 def radiation():
     r = requests.get(
-        "http://ha.local:8123/api/states/sensor.geiger_counter_radiation_dose_per_hour",
+        "http://%s:8123/api/states/sensor.geiger_counter_radiation_dose_per_hour" % ha_host,
         headers={"Authorization": "Bearer %s" % ha_token}
     )
     logging.info('get water data')
@@ -42,7 +45,7 @@ def radiation():
 @route('/water')
 def radiation():
     r = requests.get(
-        "http://ha.local:8123/api/states/binary_sensor.water_pressure_sensor_contact",
+        "http://%s:8123/api/states/binary_sensor.water_pressure_sensor_contact" % ha_host,
         headers={"Authorization": "Bearer %s" % ha_token}
     )
     logging.info('get water data')
@@ -53,7 +56,7 @@ def radiation():
 @route('/electricity')
 def radiation():
     r = requests.get(
-        "http://ha.local:8123/api/states/binary_sensor.2233_ca1_zone_0_power",
+        "http://%s:8123/api/states/binary_sensor.2233_ca1_zone_0_power" % ha_host,
         headers={"Authorization": "Bearer %s" % ha_token}
     )
     logging.info('get water data')
