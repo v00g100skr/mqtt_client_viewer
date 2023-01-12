@@ -35,7 +35,7 @@ def radiation():
         "http://%s:8123/api/states/sensor.geiger_counter_radiation_dose_per_hour" % ha_host,
         headers={"Authorization": "Bearer %s" % ha_token}
     )
-    logging.info('get water data')
+    logging.info('get radiation data')
     response.content_type = 'application/json'
     return r or {'error': 'no data'}
 
@@ -57,7 +57,7 @@ def radiation():
         "http://%s:8123/api/states/binary_sensor.2233_ca1_zone_0_power" % ha_host,
         headers={"Authorization": "Bearer %s" % ha_token}
     )
-    logging.info('get water data')
+    logging.info('get electricity data')
     response.content_type = 'application/json'
     return r or {'error': 'no data'}
 
