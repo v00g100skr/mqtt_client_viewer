@@ -1,6 +1,6 @@
 from bottle import route, run, response
 
-import logging, os
+import logging, os, requests
 
 from pymemcache.client import base
 
@@ -15,6 +15,7 @@ logging.basicConfig(
 
 host = os.environ.get('MEMCHACHED_HOST') or 'memcached'
 port = os.environ.get('MEMCHACHED_PORT') or 11211
+ha_token = os.environ.get('HA_TOKEN') or 'token'
 
 cache = base.Client((host, port))
 
@@ -25,6 +26,39 @@ cache = base.Client((host, port))
 def test():
     logging.info('Hello World!')
     return "Hello World!"
+
+
+@route('/radiation')
+def radiation():
+    r = requests.get(
+        "http://ha.local:8123/api/states/sensor.geiger_counter_radiation_dose_per_hour",
+        headers={"Authorization": "Bearer %s" % ha_token}
+    )
+    logging.info('get water data')
+    response.content_type = 'application/json'
+    return r or {'error': 'no data'}
+
+
+@route('/water')
+def radiation():
+    r = requests.get(
+        "http://ha.local:8123/api/states/binary_sensor.water_pressure_sensor_contact",
+        headers={"Authorization": "Bearer %s" % ha_token}
+    )
+    logging.info('get water data')
+    response.content_type = 'application/json'
+    return r or {'error': 'no data'}
+
+
+@route('/electricity')
+def radiation():
+    r = requests.get(
+        "http://ha.local:8123/api/states/binary_sensor.2233_ca1_zone_0_power",
+        headers={"Authorization": "Bearer %s" % ha_token}
+    )
+    logging.info('get water data')
+    response.content_type = 'application/json'
+    return r or {'error': 'no data'}
 
 
 @route('/')
