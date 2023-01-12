@@ -18,8 +18,6 @@ port = os.environ.get('MEMCHACHED_PORT') or 11211
 ha_token = os.environ.get('HA_TOKEN') or 'token'
 ha_host = os.environ.get('HA_HOST') or 'ha.host'
 
-
-# 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5MDlmYjc3MzQ3NTU0NDhhODBlMTQ2ZjRiYWZjMThlMSIsImlhdCI6MTY3MzQ4MTQwNiwiZXhwIjoxOTg4ODQxNDA2fQ.qQTlZBRyurKTEDRr5hQmlkfteqEQTWqx6wiDZApYSOc'
 cache = base.Client((host, port))
 
 # This is the Viewer
