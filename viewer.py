@@ -61,6 +61,13 @@ def radiation():
     response.content_type = 'application/json'
     return r or {'error': 'no data'}
 
+@route('/alarm_map')
+def alarm_map():
+    cached_data = cache.get('alarm_map')
+    logging.info('caching data get: %s' % cached_data)
+    response.content_type = 'application/json'
+    return cached_data or {'error': 'no data in cache'}
+
 
 @route('/')
 def hello():
