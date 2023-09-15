@@ -9,11 +9,11 @@ CONTAINER_PORT=8080
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -t|--ha-token)
-            ETRYVOGA_HOST="$2"
+            HA_TOKEN="$2"
             shift 2
             ;;
         -h|--ha-host)
-            DATA_TOKEN="$2"
+            HA_HOST="$2"
             shift 2
             ;;
         -p|--container-port)
