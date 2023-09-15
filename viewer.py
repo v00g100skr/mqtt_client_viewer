@@ -8,25 +8,12 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        #logging.FileHandler("debug.log"),
         logging.StreamHandler()
     ]
 )
 
-host = os.environ.get('MEMCHACHED_HOST') or 'memcached'
-port = os.environ.get('MEMCHACHED_PORT') or 11211
 ha_token = os.environ.get('HA_TOKEN') or 'token'
 ha_host = os.environ.get('HA_HOST') or 'ha.host'
-
-cache = base.Client((host, port))
-
-# This is the Viewer
-
-
-@route('/test')
-def test():
-    logging.info('Hello World!')
-    return "Hello World!"
 
 
 @route('/radiation')
@@ -62,21 +49,11 @@ def radiation():
     return r or {'error': 'no data'}
 
 
-@route('/alarm_map/statuses.json')
-def alarm_map():
-    cached_data = cache.get('alarm_map')
-    logging.info('caching data get: %s' % cached_data)
-    response.content_type = 'application/json'
-    return cached_data or {'error': 'no data in cache'}
-
-
 @route('/')
 def hello():
-    cached_data = cache.get('geiger_counter')
-    logging.info('caching data get: %s' % cached_data)
-    response.content_type = 'application/json'
-    return cached_data or {'error': 'no data in cache'}
+    logging.info('Hello World!')
+    return "Hello World!"
 
 
-logging.info('start viewer %s:%s' % (host, port))
+logging.info('start viewer')
 run(host='0.0.0.0', port=8080, debug=True)
