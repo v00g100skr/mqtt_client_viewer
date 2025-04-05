@@ -14,6 +14,7 @@ logging.basicConfig(
 
 ha_token = os.environ.get('HA_TOKEN') or 'token'
 ha_host = os.environ.get('HA_HOST') or 'ha.host'
+port = os.environ.get('PORT') or 8080
 
 
 @route('/radiation')
@@ -66,4 +67,4 @@ def hello():
 
 
 logging.info('start viewer')
-run(host='0.0.0.0', port=8080, debug=True)
+run(host='0.0.0.0', port=int(port), debug=True)
