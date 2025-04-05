@@ -3,7 +3,7 @@
 # Default values
 HA_TOKEN=""
 HA_HOST=""
-CONTAINER_PORT=8080
+PORT=8080
 
 # Check for arguments
 while [[ $# -gt 0 ]]; do
@@ -16,8 +16,8 @@ while [[ $# -gt 0 ]]; do
             HA_HOST="$2"
             shift 2
             ;;
-        -p|--container-port)
-            CONTAINER_PORT="$2"
+        -p|--port)
+            PORT="$2"
             shift 2
             ;;
         *)
@@ -29,7 +29,7 @@ done
 
 echo "HA_TOKEN: $HA_TOKEN"
 echo "HA_HOST: $HA_HOST"
-echo "CONTAINER_PORT: $CONTAINER_PORT"
+echo "PORT: $PORT"
 
 # Updating the Git repo
 echo "Updating Git repo..."
@@ -51,7 +51,7 @@ docker rm home_assistant_viewer || true
 
 # Deploying the new container
 echo "Deploying new container..."
-docker run --name home_assistant_viewer --restart unless-stopped -d -p 8080:"$CONTAINER_PORT"  --env HA_TOKEN="$HA_TOKEN" --env HA_HOST="$HA_HOST" home_assistant_viewer
+docker run --name home_assistant_viewer --restart unless-stopped -d -p "$PORT":"$PORT"  --env HA_TOKEN="$HA_TOKEN" --env HA_HOST="$HA_HOST" home_assistant_viewer
 
 echo "Container deployed successfully!"
 
