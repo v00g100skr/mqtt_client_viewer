@@ -3,7 +3,7 @@
 # Default values
 HA_TOKEN=""
 HA_HOST=""
-PORT=8080
+PORT="8080"
 
 # Check for arguments
 while [[ $# -gt 0 ]]; do
