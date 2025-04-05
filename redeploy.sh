@@ -51,7 +51,7 @@ docker rm home_assistant_viewer || true
 
 # Deploying the new container
 echo "Deploying new container..."
-docker run --name home_assistant_viewer --restart unless-stopped -d -p "$CONTAINER_PORT":8080  --env HA_TOKEN="$HA_TOKEN" --env HA_HOST="$HA_HOST" home_assistant_viewer
+docker run --name home_assistant_viewer --restart unless-stopped -d -p 8080:"$CONTAINER_PORT"  --env HA_TOKEN="$HA_TOKEN" --env HA_HOST="$HA_HOST" home_assistant_viewer
 
 echo "Container deployed successfully!"
 
