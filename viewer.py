@@ -48,6 +48,16 @@ def radiation():
     response.content_type = 'application/json'
     return r or {'error': 'no data'}
 
+@route('/weather')
+def weather():
+    r = requests.get(
+        "http://%s:8123/api/states/sensor.sensor_outdoor_temperature" % ha_host,
+        headers={"Authorization": "Bearer %s" % ha_token}
+    )
+    logging.info('get weather data')
+    response.content_type = 'application/json'
+    return r or {'error': 'no data'}
+
 
 @route('/')
 def hello():
