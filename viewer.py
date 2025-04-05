@@ -42,7 +42,7 @@ def radiation():
 @route('/electricity')
 def radiation():
     r = requests.get(
-        "http://%s:8123/api/states/binary_sensor.2233_ca1_zone_0_power" % ha_host,
+        "http://%s:8123/api/states/binary_sensor.grid_lost" % ha_host,
         headers={"Authorization": "Bearer %s" % ha_token}
     )
     logging.info('get electricity data')
