@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Default values
 HA_TOKEN=""
@@ -11,7 +11,7 @@ ELECTRICITY_INTERVAL=30
 COOLANT_INTERVAL=30
 
 # Parse arguments
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
     case "$1" in
         -t|--ha-token)
             HA_TOKEN="$2"
@@ -62,6 +62,7 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "Example:"
             echo "  $0 -t 'your_token' -h 127.0.0.1"
+            echo "  $0 -t 'your_token' -h 10.2.0.49 --radiation-interval 60 -p 9090"
             exit 0
             ;;
         *)
@@ -92,7 +93,9 @@ echo "========================================"
 echo "Deployment Configuration:"
 echo "========================================"
 echo "HA_HOST:              $HA_HOST"
-echo "HA_TOKEN:             ${HA_TOKEN:0:20}..." # Show only first 20 chars
+# Show only first 20 chars of token
+TOKEN_PREFIX=$(echo "$HA_TOKEN" | cut -c1-20)
+echo "HA_TOKEN:             ${TOKEN_PREFIX}..."
 echo "PORT:                 $PORT"
 echo "CONTAINER_PORT:       $CONTAINER_PORT"
 echo "RADIATION_INTERVAL:   $RADIATION_INTERVAL seconds"
