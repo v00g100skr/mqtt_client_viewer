@@ -1,2 +1,6 @@
 /venv/
 .idea
+.vscode
+config.env
+__pycache__/
+*.pyc
