@@ -29,6 +29,7 @@ RADIATION_INTERVAL = int(os.environ.get('RADIATION_INTERVAL', 30))
 WATER_INTERVAL = int(os.environ.get('WATER_INTERVAL', 30))
 ELECTRICITY_INTERVAL = int(os.environ.get('ELECTRICITY_INTERVAL', 30))
 COOLANT_INTERVAL = int(os.environ.get('COOLANT_INTERVAL', 30))
+WATER_INTERVAL = int(os.environ.get('WATER_INTERVAL', 30))
 
 # In-memory cache
 cache = {
@@ -48,6 +49,11 @@ cache = {
         "error": None
     },
     "coolant": {
+        "data": None,
+        "last_updated": None,
+        "error": None
+    },
+    "weather": {
         "data": None,
         "last_updated": None,
         "error": None
@@ -133,6 +139,24 @@ async def poll_coolant():
             logging.error(f"Error polling coolant: {e}")
         await asyncio.sleep(COOLANT_INTERVAL)
 
+async def poll_weather():
+    """Background task to poll weather data from Home Assistant"""
+    while True:
+        try:
+            response = await http_client.get(
+                f"http://{HA_HOST}:8123/api/states/sensor.sensor_outdoor_temperature",
+                headers={"Authorization": f"Bearer {HA_TOKEN}"}
+            )
+            response.raise_for_status()
+            cache["weather"]["data"] = response.json()
+            cache["weather"]["last_updated"] = datetime.now().isoformat()
+            cache["weather"]["error"] = None
+            logging.info("Updated weather data")
+        except Exception as e:
+            cache["weather"]["error"] = str(e)
+            logging.error(f"Error polling weather: {e}")
+        await asyncio.sleep(300)  # Poll every 5 minutes
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -147,7 +171,8 @@ async def lifespan(app: FastAPI):
         asyncio.create_task(poll_radiation()),
         asyncio.create_task(poll_water()),
         asyncio.create_task(poll_electricity()),
-        asyncio.create_task(poll_coolant())
+        asyncio.create_task(poll_coolant()),
+        asyncio.create_task(poll_weather())
     ]
 
     yield
@@ -201,6 +226,13 @@ async def get_coolant():
     """Get coolant temperature sensor data from cache"""
     logging.info("Get coolant data")
     return cache["coolant"]["data"] or {"error": "no data"}
+
+
+@app.get("/weather")
+async def get_weather():
+    """Get weather sensor data from cache"""
+    logging.info("Get weather data")
+    return cache["weather"]["data"] or {"error": "no data"}
 
 
 @app.get("/debug/cache")
