@@ -28,8 +28,8 @@ PORT = int(os.environ.get('PORT', 8080))
 RADIATION_INTERVAL = int(os.environ.get('RADIATION_INTERVAL', 30))
 WATER_INTERVAL = int(os.environ.get('WATER_INTERVAL', 30))
 ELECTRICITY_INTERVAL = int(os.environ.get('ELECTRICITY_INTERVAL', 30))
-COOLANT_INTERVAL = int(os.environ.get('COOLANT_INTERVAL', 30))
-WATER_INTERVAL = int(os.environ.get('WATER_INTERVAL', 30))
+COOLANT_INTERVAL = int(os.environ.get('COOLANT_INTERVAL', 60))
+WEATHER_INTERVAL = int(os.environ.get('WEATHER_INTERVAL', 600))
 
 # In-memory cache
 cache = {
@@ -155,7 +155,7 @@ async def poll_weather():
         except Exception as e:
             cache["weather"]["error"] = str(e)
             logging.error(f"Error polling weather: {e}")
-        await asyncio.sleep(300)  # Poll every 5 minutes
+        await asyncio.sleep(WEATHER_INTERVAL)
 
 
 @asynccontextmanager
