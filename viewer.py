@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 import httpx
 import asyncio
@@ -59,6 +59,26 @@ cache = {
         "error": None
     }
 }
+
+def get_real_ip(request: Request) -> str:
+    """Extract real client IP from Cloudflare headers or fallback to direct IP"""
+    # Спочатку перевіряємо CF-Connecting-IP (найнадійніший для Cloudflare)
+    cf_ip = request.headers.get('CF-Connecting-IP')
+    if cf_ip:
+        return cf_ip
+
+    # Потім X-Forwarded-For (беремо перший IP з ланцюжка)
+    x_forwarded = request.headers.get('X-Forwarded-For')
+    if x_forwarded:
+        return x_forwarded.split(',')[0].strip()
+
+    # Або X-Real-IP
+    x_real = request.headers.get('X-Real-IP')
+    if x_real:
+        return x_real
+
+    # Fallback на direct connection IP
+    return request.client.host if request.client else "unknown"
 
 # HTTP client for async requests
 http_client = None
@@ -194,50 +214,58 @@ app = FastAPI(
 
 
 @app.get("/")
-async def hello():
+async def hello(request: Request):
     """Health check endpoint"""
-    logging.info("Hello World!")
+    client_ip = get_real_ip(request)
+    logging.info(f"Hello World! [IP: {client_ip}]")
     return "Hello World!"
 
 
 @app.get("/radiation")
-async def get_radiation():
+async def get_radiation(request: Request):
     """Get radiation sensor data from cache"""
-    logging.info("Get radiation data")
+    client_ip = get_real_ip(request)
+    logging.info(f"Get radiation data [IP: {client_ip}]")
     return cache["radiation"]["data"] or {"error": "no data"}
 
 
 @app.get("/water")
-async def get_water():
+async def get_water(request: Request):
     """Get water pressure sensor data from cache"""
-    logging.info("Get water data")
+    client_ip = get_real_ip(request)
+    logging.info(f"Get water data [IP: {client_ip}]")
     return cache["water"]["data"] or {"error": "no data"}
 
 
 @app.get("/electricity")
-async def get_electricity():
+async def get_electricity(request: Request):
     """Get electricity/power sensor data from cache"""
-    logging.info("Get electricity data")
+    client_ip = get_real_ip(request)
+    logging.info(f"Get electricity data [IP: {client_ip}]")
     return cache["electricity"]["data"] or {"error": "no data"}
 
 
 @app.get("/coolant")
-async def get_coolant():
+async def get_coolant(request: Request):
     """Get coolant temperature sensor data from cache"""
-    logging.info("Get coolant data")
+    client_ip = get_real_ip(request)
+    logging.info(f"Get coolant data [IP: {client_ip}]")
     return cache["coolant"]["data"] or {"error": "no data"}
 
 
 @app.get("/weather")
-async def get_weather():
+async def get_weather(request: Request):
     """Get weather sensor data from cache"""
-    logging.info("Get weather data")
+    client_ip = get_real_ip(request)
+    logging.info(f"Get weather data [IP: {client_ip}]")
     return cache["weather"]["data"] or {"error": "no data"}
 
 
 @app.get("/debug/cache")
-async def debug_cache():
+async def debug_cache(request: Request):
     """Debug endpoint to view entire cache structure including metadata"""
+    client_ip = get_real_ip(request)
+    logging.info(f"Debug cache access [IP: {client_ip}]")
     return cache
 
 

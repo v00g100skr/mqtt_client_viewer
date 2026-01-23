@@ -9,6 +9,7 @@ RADIATION_INTERVAL=30
 WATER_INTERVAL=30
 ELECTRICITY_INTERVAL=30
 COOLANT_INTERVAL=30
+WEATHER_INTERVAL=600
 
 # Parse arguments
 while [ $# -gt 0 ]; do
@@ -45,6 +46,10 @@ while [ $# -gt 0 ]; do
             COOLANT_INTERVAL="$2"
             shift 2
             ;;
+        --weather-interval)
+            WEATHER_INTERVAL="$2"
+            shift 2
+            ;;
         --help)
             echo "Usage: $0 -t TOKEN -h HOST [OPTIONS]"
             echo ""
@@ -59,6 +64,7 @@ while [ $# -gt 0 ]; do
             echo "      --water-interval SECONDS      Water polling interval (default: 30)"
             echo "      --electricity-interval SEC    Electricity polling interval (default: 30)"
             echo "      --coolant-interval SECONDS    Coolant polling interval (default: 30)"
+            echo "      --weather-interval SECONDS    Weather polling interval (default: 600)"
             echo ""
             echo "Example:"
             echo "  $0 -t 'your_token' -h 127.0.0.1"
@@ -102,6 +108,7 @@ echo "RADIATION_INTERVAL:   $RADIATION_INTERVAL seconds"
 echo "WATER_INTERVAL:       $WATER_INTERVAL seconds"
 echo "ELECTRICITY_INTERVAL: $ELECTRICITY_INTERVAL seconds"
 echo "COOLANT_INTERVAL:     $COOLANT_INTERVAL seconds"
+echo "WEATHER_INTERVAL:     $WEATHER_INTERVAL seconds"
 echo "========================================"
 echo ""
 
@@ -131,6 +138,7 @@ docker run --name home_assistant_viewer \
     --env WATER_INTERVAL="$WATER_INTERVAL" \
     --env ELECTRICITY_INTERVAL="$ELECTRICITY_INTERVAL" \
     --env COOLANT_INTERVAL="$COOLANT_INTERVAL" \
+    --env WEATHER_INTERVAL="$WEATHER_INTERVAL" \
     home_assistant_viewer
 
 echo ""
