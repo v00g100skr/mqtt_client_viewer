@@ -146,7 +146,7 @@ async def poll_coolant():
     while True:
         try:
             response = await http_client.get(
-                f"http://{HA_HOST}:8123/api/states/sensor.sensor_coolant_temperature",
+                f"http://{HA_HOST}:8123/api/states/sensor.sensor_coolant_2_temperature",
                 headers={"Authorization": f"Bearer {HA_TOKEN}"}
             )
             response.raise_for_status()
